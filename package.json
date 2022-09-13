@@ -1,0 +1,30 @@
+{
+  "name": "tic-tac-toe-handler",
+  "version": "1.0.0",
+  "description": "AWS Lambda handler for tic-tac-toe microservice",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "npx tsc",
+    "zip": "cd dist && zip -r ../archive.zip *",
+    "clean": "rm -rf dist/ archive.zip",
+    "rebuild": "npm run clean && npm run build && npm run zip",
+    "deploy": "aws lambda update-function-code --function-name tic-tac-toe-handler --zip-file fileb://archive.zip",
+    "redeploy": "npm run rebuild && npm run deploy",
+    "test": "curl -X POST https://8cm45dsav8.execute-api.us-west-2.amazonaws.com/prod/ttt"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amirkour/tic-tac-toe-handler.git"
+  },
+  "author": "Amir Kouretchian",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/amirkour/tic-tac-toe-handler/issues"
+  },
+  "homepage": "https://github.com/amirkour/tic-tac-toe-handler#readme",
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.103",
+    "@types/node": "^18.7.17",
+    "typescript": "^4.8.3"
+  }
+}
