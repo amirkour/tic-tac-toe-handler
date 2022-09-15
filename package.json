@@ -2,7 +2,6 @@
   "name": "tic-tac-toe-handler",
   "version": "1.0.0",
   "description": "AWS Lambda handler for tic-tac-toe microservice",
-  "main": "src/index.ts",
   "scripts": {
     "build": "npx tsc",
     "zip": "cd dist && zip -r ../archive.zip *",
