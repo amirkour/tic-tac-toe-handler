@@ -22,3 +22,11 @@ then, simply run:
 `npm run redeploy`
 
 might be a good idea to just try a build first: `npm run build` or `npm run rebuild` and make sure things compile!
+
+# curl/test the api
+
+to test, simply run:
+
+`KEY=<api key value> npm run test`
+
+where KEY is an API key you gotta figure out how to get 😁

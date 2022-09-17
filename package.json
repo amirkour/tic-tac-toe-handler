@@ -9,7 +9,7 @@
     "rebuild": "npm run clean && npm run build && npm run zip",
     "deploy": "aws lambda update-function-code --function-name tic-tac-toe-handler --zip-file fileb://archive.zip",
     "redeploy": "npm run rebuild && npm run deploy",
-    "test": "curl -X POST https://8cm45dsav8.execute-api.us-west-2.amazonaws.com/prod/ttt"
+    "test": "curl -H \"x-api-key: $KEY\" -H \"Content-Type: application/json\" -d \"{\"board\": [null,\"x\",\"o\",null,null,null,null,null,null]}\", -X POST https://8cm45dsav8.execute-api.us-west-2.amazonaws.com/prod/ttt"
   },
   "repository": {
     "type": "git",
