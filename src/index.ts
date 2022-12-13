@@ -43,7 +43,7 @@ export const handler = async (
   console.log(`Event: ${JSON.stringify(event, null, 2)}`);
   console.log(`Context: ${JSON.stringify(context, null, 2)}`);
 
-  let statusCode = 200;
+  let statusCode;
   const response: ResponseBody = {
     error: null,
     board: [],
@@ -86,8 +86,9 @@ export const handler = async (
 
     response.nextToMove = game.whosTurn();
     response.board = game.getBoard();
+    statusCode = 200;
   } catch (e) {
-    statusCode = statusCode === 200 ? 500 : statusCode;
+    statusCode = statusCode ?? 500;
     response.error = `${e}`;
   }
 
