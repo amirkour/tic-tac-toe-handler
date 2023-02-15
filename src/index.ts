@@ -1,5 +1,5 @@
 import { Context, APIGatewayProxyResult, APIGatewayEvent } from "aws-lambda";
-import Game, { strategies, DRAW, MOVE } from "min-max-tic-tac-toe";
+import Game, { strategies, DRAW, MOVE } from "min-max-tic-tac-toe/src";
 const { RandomNextMoveGetter } = strategies;
 
 interface ResponseBody {
