@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "AWS Lambda handler for tic-tac-toe microservice",
   "scripts": {
-    "build": "npx tsc -b --watch",
+    "build": "npx tsc -b",
+    "build:dev": "npx tsc -b --watch",
     "clean": "rm -rf dist/",
     "rebuild": "npm run clean && npm run build"
   },
