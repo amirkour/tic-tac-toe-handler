@@ -9,7 +9,10 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "rootDir": "."
+    "rootDir": ".",
+    "paths": {
+      "min-max-tic-tac-toe": ["../../min-max-tic-tac-toe/src"]
+    }
   },
   "references": [{ "path": "../min-max-tic-tac-toe" }]
 }
