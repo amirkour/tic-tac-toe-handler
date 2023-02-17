@@ -37,7 +37,7 @@ const gameOver = (game: Game, response: ResponseBody): boolean => {
  * code and error message will result.
  */
 export const handler = async (
-  event: APIGatewayEvent,
+  event: any,
   context: Context
 ): Promise<APIGatewayProxyResult> => {
   console.log(`Event: ${JSON.stringify(event, null, 2)}`);
@@ -52,12 +52,12 @@ export const handler = async (
   };
 
   try {
-    if (event.body == null) {
-      statusCode = 400;
-      throw "Request must include an event body";
-    }
+    let requestBody: any =
+      typeof event === "string" ? JSON.parse(event) : event;
 
-    const requestBody: any = JSON.parse(event.body);
+    // if the event has a "body" parameter, it's an API proxy event.
+    // otherwise, it's just a run-of-the-mill lambda event
+    requestBody = requestBody.body || requestBody;
     if (!requestBody.board || !(requestBody.board instanceof Array)) {
       statusCode = 400;
       throw 'Request must include a "board" parameter, which must be an array of strings';
@@ -88,6 +88,7 @@ export const handler = async (
     response.board = game.getBoard();
     statusCode = 200;
   } catch (e) {
+    console.trace(`Encountered the following error: ${e}`);
     statusCode = statusCode ?? 500;
     response.error = `${e}`;
   }

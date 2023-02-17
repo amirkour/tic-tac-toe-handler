@@ -6,7 +6,10 @@
     "build": "npx tsc -b",
     "build:dev": "npx tsc -b --watch",
     "clean": "rm -rf dist/",
-    "rebuild": "npm run clean && npm run build"
+    "rebuild": "npm run clean && npm run build",
+    "watch:dev": "npx tsc-watch --onSuccess \"npm run dsc\"",
+    "dsc": "docker compose restart && docker compose logs -f --tail=100",
+    "test:curl": "curl -H \"Content-type: application/json\" -d '{\"board\":[null,null,null,null,null,null,null,null,null],\"move\":0}' -XPOST \"http://localhost:9000/2015-03-31/functions/function/invocations\""
   },
   "repository": {
     "type": "git",
@@ -22,6 +25,7 @@
     "@tsconfig/recommended": "^1.0.2",
     "@types/aws-lambda": "^8.10.103",
     "@types/node": "^18.7.17",
+    "tsc-watch": "^6.0.0",
     "typescript": "^4.8.3"
   },
   "dependencies": {
