@@ -52,12 +52,16 @@ export const handler = async (
   };
 
   try {
+    // when straight-up lambda events come in, they sometimes appear as strings.
+    // likewise, if the event is from API Gateway, it looks different - in any
+    // case, we'll try to normalize the various event structures
     let requestBody: any =
       typeof event === "string" ? JSON.parse(event) : event;
 
-    // if the event has a "body" parameter, it's an API proxy event.
-    // otherwise, it's just a run-of-the-mill lambda event
-    requestBody = requestBody.body || requestBody;
+    if (typeof requestBody.body === "string")
+      requestBody = JSON.parse(requestBody.body);
+    else if (requestBody.body != null) requestBody = requestBody.body;
+
     if (!requestBody.board || !(requestBody.board instanceof Array)) {
       statusCode = 400;
       throw 'Request must include a "board" parameter, which must be an array of strings';
