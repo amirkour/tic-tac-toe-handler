@@ -1,32 +1,21 @@
 # tic-tac-toe-handler
 aws lambda handler for tic-tac-toe implementation
 
-# linking min-max-tic-tac-toe
+# build and run
 
-while developing, you can't get min-max-tic-tac-toe imports to resolve until you link that project:
+1. clone this repo
+2. `npm i`
+3. `npm run build`
+4. `npm run watch:dev`
 
-`npm link ../min-max-tic-tac-toe`
+number 4 assumes you've started docker compose from the root `reacting` folder.
 
-make sure you build the min-max-tic-tac-toe project before linking to it
+# smoke test the api
 
-# layer updating
+## in dev
 
-this handler depends on min-max-tic-tac-toe - to bundle that project and upload it to an aws lambda layer, and then associate that layer to this handler, see notes in [min-max-tic-tac-toe's readme](https://github.com/amirkour/min-max-tic-tac-toe)
+`npm run test:curl` 👈 only works if docker compose is up
 
-# uploading/updating in aws
+## prod API
 
-first, make sure the min-max-tic-tac-toe code/layer is updated (read above.)
-
-then, simply run:
-
-`npm run redeploy`
-
-might be a good idea to just try a build first: `npm run build` or `npm run rebuild` and make sure things compile!
-
-# curl/test the api
-
-to test, simply run:
-
-`KEY=<api key value> npm run test`
-
-where KEY is an API key you gotta figure out how to get 😁
+You can curl the prod API by copying the `test:curl` command, but you have to include the `x-api-key` header, along w/ a valid API key.
