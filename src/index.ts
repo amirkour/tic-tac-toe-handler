@@ -1,12 +1,14 @@
 import { Context, APIGatewayProxyResult, APIGatewayEvent } from "aws-lambda";
 import Game, { strategies, DRAW, MOVE } from "min-max-tic-tac-toe";
-const { RandomNextMoveGetter } = strategies;
+const { RandomNextMoveGetter, MinMaxNextMoveGetter } = strategies;
+import { isDev } from "./utils";
 
 interface ResponseBody {
   error: null | string;
   board: MOVE[];
   outcome: null | string;
   nextToMove: MOVE;
+  boardValue?: number;
 }
 
 /*
@@ -40,8 +42,9 @@ export const handler = async (
   event: any,
   context: Context
 ): Promise<APIGatewayProxyResult> => {
-  console.log(`Event: ${JSON.stringify(event, null, 2)}`);
-  console.log(`Context: ${JSON.stringify(context, null, 2)}`);
+  console.log("\x1b[36m%s\x1b[0m", `Incoming Event: ${JSON.stringify(event)}`);
+  console.log(`Incoming Context: ${JSON.stringify(context)}`);
+  console.log(`dev mode: ${isDev()}`);
 
   let statusCode;
   const response: ResponseBody = {
@@ -67,15 +70,16 @@ export const handler = async (
       throw 'Request must include a "board" parameter, which must be an array of strings';
     }
 
-    if (!Number.isInteger(requestBody.move)) {
+    if (isNaN(parseInt(requestBody.move))) {
       statusCode = 400;
       throw 'Request must include a "move" parameter, which must be an intenger';
     }
 
     const move = requestBody.move;
     const board = requestBody.board;
+    const nmg = new MinMaxNextMoveGetter({ maxPly: .5 });
     const game = new Game({
-      nmg: new RandomNextMoveGetter({ min: 0, max: 8 }),
+      nmg,
       board,
     });
 
@@ -83,9 +87,17 @@ export const handler = async (
       game.makeMove(move);
       if (gameOver(game, response)) break;
 
-      const computersMove = game.getNextMove();
-      if (computersMove != null) game.makeMove(computersMove);
-      if (gameOver(game, response)) break;
+      // in dev, allow the user to make both X and O moves.
+      // but in prod, automate the opponent's moves
+      // TODO - the client should just make the request instead of the service
+      // TODO - deciding if/when to play O
+      if (isDev()) {
+        response.boardValue = nmg.evaluateBoardValue(game.getBoard());
+      } else {
+        const computersMove = game.getNextMove();
+        if (computersMove != null) game.makeMove(computersMove);
+        if (gameOver(game, response)) break;
+      }
     } while (false);
 
     response.nextToMove = game.whosTurn();
